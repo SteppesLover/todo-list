@@ -1,0 +1,8 @@
+In your own words, what does it mean to be curious about something?
+Sometimes you’re just lying in bed and thinking: “How does this work? How can I do that?” That’s what curiosity is—it’s the idea that you’re thinking about something without expecting any benefit, just for the fun of it. It’s fun to learn new things.
+
+What’s one thing that you were curious to learn more about recently (this doesn’t need to be coding-related)? How did you learn more about it?
+I’m interested in planned economies, and recently I found out about Alexey Safronov’s new book Big USSR Economy. Now I’m reading it to learn more.
+
+What’s one best practice you’ve learned in your first few weeks at CTD that you don’t know “the why” behind? How can you find out “the why”?
+One best practice I’ve learned at CTD is to follow naming conventions—for example, naming models in singular (like User) and tables in plural (like users). I’m not completely sure why it works this way, but I could find out by exploring the Rails documentation or asking a mentor.

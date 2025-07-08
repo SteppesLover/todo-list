@@ -1,3 +1,8 @@
 What’s your rule of thumb for when to ask for help?
+My rule of thumb is simple: if I’ve run out of ways to solve the problem on my own, I ask for help.
 When is an instance where you wish you would have asked for help sooner?
+Well, I can’t recall a specific situation like that in coding, but in real life it definitely happens. Sometimes I take a really labor-intensive approach to a task, only to later find out there was a much easier way. Like someone telling me, “You didn’t have to cut the grass with a scythe — you could’ve used a lawn mower.”
 What information have you found crucial to include in your questions so that mentors or peers can help answer your questions quicker?
+1. A screenshot of the problem.
+2. Just like in a bug report, it’s important to include detailed steps to reproduce the issue — what you did, what software you used, and so on.
+3. What you’ve already tried to do to resolve the problem.

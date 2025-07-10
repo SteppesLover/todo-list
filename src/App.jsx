@@ -4,18 +4,29 @@ import TodoForm from './TodoForm.jsx';
 import { useState } from 'react';
 
 function App() {
-  const [todoList, setTodoList] = useState([]); 
+  const [filteredTodos, setTodoList] = useState([]); 
+
+  function completeTodo(id){
+  const updatedTodos = filteredTodos.map((todo) => {
+  if(todo.id===id){
+    return {...id, isCompleted: true}
+  }
+  return todo;  
+  });
+
+  setTodoList(updatedTodos);
+  }
 
   function addTodo(title) {
-    const newTodo = { title, id: Date.now() };
-    setTodoList([...todoList, newTodo]);
+    const newTodo = { title, id: Date.now(), isCompleted: false };
+    setTodoList([...filteredTodos, newTodo]);
   }
 
   return (
     <div>
       <h1>Todo List</h1>
       <TodoForm onAddTodo={addTodo} />
-      <TodoList todoList={todoList} />
+      <TodoList todoList={filteredTodos} onCompleteTodo={completeTodo} />
     </div>
   );
 }

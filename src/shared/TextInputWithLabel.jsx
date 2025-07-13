@@ -1,13 +1,13 @@
 function TextInputWithLabel({
   elementId,
-  label,
+  labelText,
   onChange,
   ref,
   value,
 }) {
   return (
     <>
-      <label htmlFor={elementId}>{label}</label>
+      <label htmlFor={elementId}>{labelText}</label>
       <input
         type="text"
         id={elementId}

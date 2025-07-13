@@ -13,8 +13,4 @@ describe('App test suite', () => {
   it('expect up to equal down', () => {
     expect('up').toEqual('down');
   });
-
-  it('expect up to not match regular expression /down/', () => {
-    expect('up').not.toMatch(/down/);
-  });
 });

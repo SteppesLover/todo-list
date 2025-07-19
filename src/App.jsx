@@ -39,7 +39,7 @@ function App() {
         const todos = records.map((record) => {
           const todo = {
             id: record.id,
-            title: record.fields.Title,
+            title: record.fields.title,
             ...record.fields,
           };
 
@@ -62,59 +62,62 @@ function App() {
   }, [url, token]);
 
   async function updateTodo(editedTodo) {
-    setIsSaving(true);
-    const originalTodo = todos.find((todo) => todo.id === editedTodo.id);
+  setIsSaving(true);
 
-    const payload = {
-      records: [
-        {
-          id: editedTodo.id,
-          fields: {
-            Title: editedTodo.title,
-            isCompleted: editedTodo.isCompleted,
-          },
+  const originalTodo = todos.find((todo) => todo.id === editedTodo.id);
+
+  const payload = {
+    records: [
+      {
+        id: editedTodo.id,
+        fields: {
+          title: editedTodo.title,
+          isCompleted: editedTodo.isCompleted,
         },
-      ],
-    };
-
-    const options = {
-      method: 'PATCH',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload),
-    };
+    ],
+  };
 
-    try {
-      const resp = await fetch(url, options);
+  const options = {
+    method: 'PATCH',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  };
 
-      if (!resp.ok) {
-        throw new Error(resp.message);
-      }
+  try {
+    const resp = await fetch(url, options);
 
-      const { records } = await resp.json();
+    if (!resp.ok) {
+      const errorData = await resp.json().catch(() => ({}));
+      const errorMessage = errorData?.error?.message || `HTTP error! Status: ${resp.status}`;
+      throw new Error(errorMessage);
+    }
+
+    const { records } = await resp.json();
 
     const updatedTodo = {
-    id: records[0].id,
-    title: records[0].fields.Title,
-    isCompleted: records[0].fields.isCompleted ?? false,
+      id: records[0].id,
+      title: records[0].fields.title,
+      isCompleted: records[0].fields.isCompleted ?? false,
     };
 
-      const updatedTodos = todos.map((todo) =>
-        todo.id === updatedTodo.id ? updatedTodo : todo
-      );
+    const updatedTodos = todos.map((todo) =>
+      todo.id === updatedTodo.id ? updatedTodo : todo
+    );
 
-      setTodoList(updatedTodos);
+    setTodoList(updatedTodos);
     } catch (error) {
-      console.error("Error updating todo:", error);
-      setErrorMessage(`${error.message}. Reverting todo...`);
+    console.error("Error updating todo:", error);
+    setErrorMessage(`${error.message}. Reverting todo...`);
 
-      const revertedTodos = todos.map((todo) =>
-        todo.id === originalTodo.id ? originalTodo : todo
-      );
+    const revertedTodos = todos.map((todo) =>
+      todo.id === originalTodo.id ? originalTodo : todo
+    );
 
-      setTodoList(revertedTodos);
+    setTodoList(revertedTodos);
     } finally {
       setIsSaving(false);
     }
@@ -127,7 +130,7 @@ function App() {
     records: [
       {
         fields: {
-          Title: title,
+          title: title,
           isCompleted: isCompleted ?? false,
         },
       },
@@ -153,7 +156,7 @@ function App() {
     const { records } = await resp.json();
     const savedTodo = {
     id: records[0].id,
-    title: records[0].fields.Title,
+    title: records[0].fields.title,
     isCompleted: records[0].fields.isCompleted ?? false,
     };
 

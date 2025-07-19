@@ -1,6 +1,6 @@
 import TodoListItem from "./TodoListItem";
 
-function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
+function TodoList({ todoList, onUpdateTodo, isLoading }) {
   
   return (
     <div>
@@ -16,7 +16,6 @@ function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
                 <TodoListItem
                   key={todo.id}
                   todo={todo}
-                  onCompleteTodo={onCompleteTodo}
                   onUpdateTodo={onUpdateTodo}
                 />
               ))}

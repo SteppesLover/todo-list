@@ -70,7 +70,7 @@ function App() {
         {
           id: editedTodo.id,
           fields: {
-            Title: editedTodo.Title,
+            Title: editedTodo.title,
             isCompleted: editedTodo.isCompleted,
           },
         },
@@ -118,17 +118,6 @@ function App() {
     } finally {
       setIsSaving(false);
     }
-  }
-
-  function completeTodo(id) {
-    const updatedTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, isCompleted: true };
-      }
-      return todo;
-    });
-
-    setTodoList(updatedTodos);
   }
 
   const addTodo = async ({ title, isCompleted }) => {
@@ -185,7 +174,6 @@ function App() {
 
       <TodoList
         todoList={todos}
-        onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
       />

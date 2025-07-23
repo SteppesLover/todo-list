@@ -189,7 +189,7 @@ function App() {
 };
 
   return (
-    <div>
+  <div className={styles.appContainer}>
       <StyledHeader>
         <img src="/images/logo.svg" alt="Logo" width="40" height="40" />
         Todo List
@@ -212,11 +212,11 @@ function App() {
         />
 
       {errorMessage && (
-          <StyledError>
+        <StyledError>
             <img src="/icons/error.svg" alt="Error icon" width={20} height={20} />
           <hr />
           <p>{errorMessage}</p>
-          <button onClick={() => setErrorMessage("")}>Dismiss</button>
+          <button className={styles.errorDismiss} onClick={() => setErrorMessage("")}>Dismiss</button>
           </StyledError>
       )}
     </div>

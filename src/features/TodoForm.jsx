@@ -20,7 +20,7 @@ function TodoForm({ onAddTodo, isSaving }) {
   }
 
   return (
-      <form onSubmit={handleAddTodo}>
+      <StyledForm onSubmit={handleAddTodo}>
       <TextInputWithLabel
         elementId="todoTitle"
         labelText="Todo"
@@ -28,17 +28,18 @@ function TodoForm({ onAddTodo, isSaving }) {
         onChange={(event) => setWorkingTodoTitle(event.target.value)}
         ref={todoTitleInput}
       />
-    <button disabled={isSaving}>
+    <StyledButton disabled={isSaving}>
         {isSaving ? 'Saving...' : 'Add Todo'}
-    </button>
-    </form>
+    </StyledButton>
+    </StyledForm>
   );
 }
 
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 8px;
+  padding: 8px;
 `;
 
 const StyledButton = styled.button`
@@ -47,7 +48,8 @@ const StyledButton = styled.button`
   color: white;
   border: none;
   border-radius: 4px;
-  font-style: ${({ disabled }) => (disabled ? 'italic' : 'normal')};
+  padding: 6px 12px;
+  font-style: ${props => props.disabled ? 'italic' : 'normal'};
 `;
 
 export default TodoForm;

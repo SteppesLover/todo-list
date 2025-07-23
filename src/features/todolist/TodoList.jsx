@@ -13,7 +13,7 @@ function TodoList({ todoList, onUpdateTodo, isLoading }) {
           {todoList.length === 0 ? (
             <p>No todos yet</p>
           ) : (
-            <ul>
+            <StyledList className={styles.list}>
               {todoList.map((todo) => (
                 <TodoListItem
                   key={todo.id}
@@ -21,7 +21,7 @@ function TodoList({ todoList, onUpdateTodo, isLoading }) {
                   onUpdateTodo={onUpdateTodo}
                 />
               ))}
-            </ul>
+            </StyledList>
           )}
         </>
       )}

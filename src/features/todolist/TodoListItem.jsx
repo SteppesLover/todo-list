@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
 import styled from 'styled-components';
+import styles from './TodoListItem.module.css';
 
 function TodoListItem({ todo, onUpdateTodo }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -28,7 +29,7 @@ function TodoListItem({ todo, onUpdateTodo }) {
   }
 
   return (
-    <li>
+    <li className={styles.item}>
       <form onSubmit={handleUpdate}>
         {isEditing ? (
           <>

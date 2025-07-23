@@ -1,9 +1,10 @@
 import './App.css';
+import styles from './App.module.css';
 import TodoList from './features/TodoList/TodoList.jsx';
 import TodoForm from './features/TodoForm.jsx';
 import TodoViewForm  from './features/TodoViewForm.jsx';
 import { useState, useEffect, useCallback } from 'react';
-
+import styled from "styled-components";
 
 function App() {
   const [todos, setTodoList] = useState([]);
@@ -189,8 +190,10 @@ function App() {
 
   return (
     <div>
-      <h1>Todo List</h1>
-
+      <StyledHeader>
+        <img src="/images/logo.svg" alt="Logo" width="40" height="40" />
+        Todo List
+      </StyledHeader>
       <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
 
       <TodoList
@@ -209,14 +212,31 @@ function App() {
         />
 
       {errorMessage && (
-        <div className="error-message">
+          <StyledError>
+            <img src="/icons/error.svg" alt="Error icon" width={20} height={20} />
           <hr />
           <p>{errorMessage}</p>
           <button onClick={() => setErrorMessage("")}>Dismiss</button>
-        </div>
+          </StyledError>
       )}
     </div>
   );
 }
+
+  const StyledHeader = styled.h1`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const StyledError = styled.div`
+  display: flex;
+  align-items: center;
+  color: red;
+  gap: 8px;
+  font-size: 14px;
+  margin-top: 4px;
+`;
+
 
 export default App;

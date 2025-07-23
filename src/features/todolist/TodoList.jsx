@@ -1,4 +1,6 @@
 import TodoListItem from "./TodoListItem";
+import styles from './TodoList.module.css';
+import styled from 'styled-components';
 
 function TodoList({ todoList, onUpdateTodo, isLoading }) {
   
@@ -26,5 +28,11 @@ function TodoList({ todoList, onUpdateTodo, isLoading }) {
     </div>
   );
 }
+
+const StyledList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
 
 export default TodoList;

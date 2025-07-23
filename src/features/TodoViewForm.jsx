@@ -1,3 +1,6 @@
+import styles from './TodoViewForm.module.css';
+import styled from "styled-components";
+
 import { useState, useEffect } from 'react';
 
 function TodoViewForm({sortDirection, setSortDirection, sortField, setSortField, queryString, setQueryString}) {
@@ -58,5 +61,38 @@ function TodoViewForm({sortDirection, setSortDirection, sortField, setSortField,
     </form>
   )
 }
+
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const StyledFieldset = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+`;
+
+const StyledLabel = styled.label`
+  font-weight: 600;
+`;
+
+const StyledInput = styled.input`
+  padding: 0.5rem;
+  font-size: 1rem;
+`;
+
+const StyledSelect = styled.select`
+  padding: 0.5rem;
+  font-size: 1rem;
+`;
+
+const StyledButton = styled.button`
+  padding: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+`;
 
 export default TodoViewForm;

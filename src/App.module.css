@@ -1,0 +1,13 @@
+.bodyWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.errorMessage {
+  border: 1px solid red;
+  padding: 0.5rem;
+  color: red;
+  margin-top: 1rem;
+}

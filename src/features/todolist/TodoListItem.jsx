@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
+import styled from 'styled-components';
 
 function TodoListItem({ todo, onUpdateTodo }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -47,14 +48,19 @@ function TodoListItem({ todo, onUpdateTodo }) {
         ) : (
           <>
             <label htmlFor={`checkbox${todo.id}`}>
-              <input
+            <StyledCheckboxWrapper onClick={() => onUpdateTodo({ ...todo, isCompleted: !todo.isCompleted })}>
+              <HiddenCheckbox
                 type="checkbox"
-                id={`checkbox${todo.id}`}
                 checked={todo.isCompleted}
-                onChange={() =>
-                  onUpdateTodo({ ...todo, isCompleted: !todo.isCompleted })
-                }
+                onChange={() => {}}
+                id={`checkbox${todo.id}`}
               />
+                {todo.isCompleted ? (
+                  <img src="/icons/check.svg" alt="Checked" width={24} height={24} />
+                ) : (
+                  <img src="/icons/unchecked.svg" alt="Unchecked" width={24} height={24} />
+                )}            
+              </StyledCheckboxWrapper>
             </label>
             <span onClick={() => setIsEditing(true)} style={{ cursor: 'pointer' }}>
               {todo.title}
@@ -65,5 +71,23 @@ function TodoListItem({ todo, onUpdateTodo }) {
     </li>
   );
 }
+
+  const StyledCheckboxWrapper = styled.div`
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const HiddenCheckbox = styled.input`
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+`;
 
 export default TodoListItem;

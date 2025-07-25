@@ -2,7 +2,7 @@ import TodoListItem from "./TodoListItem";
 import styles from './TodoList.module.css';
 import styled from 'styled-components';
 
-function TodoList({ todoList, onUpdateTodo, isLoading }) {
+function TodoList({ todoList, onUpdateTodo, onCompleteTodo, isLoading }) {
   
   return (
     <div>
@@ -19,6 +19,7 @@ function TodoList({ todoList, onUpdateTodo, isLoading }) {
                   key={todo.id}
                   todo={todo}
                   onUpdateTodo={onUpdateTodo}
+                  onCompleteTodo={onCompleteTodo}
                 />
               ))}
             </StyledList>

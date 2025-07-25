@@ -56,7 +56,7 @@ const encodeURL = useCallback(() => {
       } catch (error) {
         dispatch({
           type: todoActions.clearError,
-          error,
+          payload: error.message,
         });
       } finally {
         dispatch({ type: todoActions.endRequest });
@@ -109,7 +109,7 @@ const encodeURL = useCallback(() => {
     } catch (error) {
       dispatch({
         type: todoActions.clearError,
-        error,
+        payload: error.message,
       });
     } finally {
       dispatch({ type: todoActions.endRequest });
@@ -157,20 +157,56 @@ const encodeURL = useCallback(() => {
 
       dispatch({
         type: todoActions.clearError,
-        error,
+        payload: error.message,
       });
     } finally {
       dispatch({ type: todoActions.endRequest });
     }
   }
 
-  function completeTodo(todo) {
+  async function completeTodo(todo) {
+    dispatch({ type: todoActions.startRequest });
+
     const updatedTodo = {
       ...todo,
       isCompleted: !todo.isCompleted,
     };
 
-    updateTodo(updatedTodo);
+    const payload = {
+      records: [
+        {
+          id: updatedTodo.id,
+          fields: {
+            isCompleted: updatedTodo.isCompleted,
+          },
+        },
+      ],
+    };
+
+    const options = {
+      method: 'PATCH',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    };
+
+    try {
+      await fetch(encodeURL(), options);
+
+      dispatch({
+        type: todoActions.completeTodo,
+        payload: updatedTodo,
+      });
+    } catch (error) {
+      dispatch({
+        type: todoActions.setLoadError,
+        payload: error.message,
+      });
+    } finally {
+      dispatch({ type: todoActions.endRequest });
+    }
   }
 
   return (
@@ -185,6 +221,7 @@ const encodeURL = useCallback(() => {
     <TodoList
       todoList={todoState.todoList.filter(todo => !todo.isCompleted)}
       onUpdateTodo={updateTodo}
+      onCompleteTodo={completeTodo}
       isLoading={todoState.isLoading}
     />
 
@@ -206,7 +243,7 @@ const encodeURL = useCallback(() => {
         <p>{todoState.errorMessage}</p>
         <button
           className={styles.errorDismiss}
-          onClick={() => dispatch({ type: todoActions.clearError, error: "" })}
+          onClick={() => dispatch({ type: todoActions.clearError, payload: "" })}
         >
           Dismiss
         </button>

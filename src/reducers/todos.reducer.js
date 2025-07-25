@@ -104,7 +104,7 @@ function reducer(state = initialState, action) {
 
     case actions.completeTodo: {
     const updatedTodos = state.todoList.map((todo) =>
-        todo.id === action.id ? { ...todo, isCompleted: true } : todo
+        todo.id === action.payload.id ? { ...todo, isCompleted: true } : todo
     );
 
     return {

@@ -55,7 +55,7 @@ const encodeURL = useCallback(() => {
         });
       } catch (error) {
         dispatch({
-          type: todoActions.setLoadError,
+          type: todoActions.clearError,
           error,
         });
       } finally {
@@ -108,7 +108,7 @@ const encodeURL = useCallback(() => {
       });
     } catch (error) {
       dispatch({
-        type: todoActions.setLoadError,
+        type: todoActions.clearError,
         error,
       });
     } finally {
@@ -156,7 +156,7 @@ const encodeURL = useCallback(() => {
       });
 
       dispatch({
-        type: todoActions.setLoadError,
+        type: todoActions.clearError,
         error,
       });
     } finally {
@@ -206,7 +206,7 @@ const encodeURL = useCallback(() => {
         <p>{todoState.errorMessage}</p>
         <button
           className={styles.errorDismiss}
-          onClick={() => dispatch({ type: todoActions.setLoadError, error: "" })}
+          onClick={() => dispatch({ type: todoActions.clearError, error: "" })}
         >
           Dismiss
         </button>

@@ -87,7 +87,7 @@ function reducer(state = initialState, action) {
     case actions.revertTodo:
     case actions.updateTodo: {
     const updatedTodos = state.todoList.map((todo) =>
-        todo.id === action.editedTodo.id ? action.editedTodo : todo
+        todo.id === action.payload.id ? action.payload : todo
     );
 
     const updatedState = {

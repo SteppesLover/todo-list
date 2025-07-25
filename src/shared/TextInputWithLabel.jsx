@@ -14,14 +14,14 @@ const StyledInput = styled.input`
 
 function TextInputWithLabel({
   elementId,
-  labelText,
+  label,
   onChange,
   ref,
   value,
 }) {
   return (
     <>
-      <StyledLabel  htmlFor={elementId}>{labelText}</StyledLabel>
+      <StyledLabel  htmlFor={elementId}>{label}</StyledLabel>
       <StyledInput
         type="text"
         id={elementId}

@@ -49,7 +49,7 @@ function reducer(state = initialState, action) {
         ...state,
         isLoading: false,
         isSaving: false,
-        errorMessage: action.error.message,
+        errorMessage: action.payload,
       };
 
     case actions.clearError:

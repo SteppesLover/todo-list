@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import TextInputWithLabel from '../../shared/TextInputWithLabel';
+import TextInputWithLabel from '../../../shared/TextInputWithLabel';
 import styled from 'styled-components';
 import styles from './TodoListItem.module.css';
 

@@ -1,33 +1,43 @@
 import './App.css';
 import styles from './App.module.css';
-import TodoList from './features/TodoList/TodoList.jsx';
-import TodoForm from './features/TodoForm.jsx';
-import TodoViewForm  from './features/TodoViewForm.jsx';
-import { useReducer, useEffect, useCallback } from 'react';
 import styled from "styled-components";
+import { useReducer, useState, useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
+import TodosPage from './pages/TodosPage';
+import Header from './shared/Header';
 import {
   reducer as todosReducer,
   actions as todoActions,
   initialState as initialTodosState,
 } from './reducers/todos.reducer.js';
 
-
 function App() {
   const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
+  const [title, setTitle] = useState('');
+  const location = useLocation();
+  const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+  const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
-const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
-const token = `Bearer ${import.meta.env.VITE_PAT}`;
+  const encodeURL = useCallback(() => {
+    let sortQuery = `sort[0][field]=${todoState.sortField}&sort[0][direction]=${todoState.sortDirection}`;
+    let searchQuery = "";
 
-const encodeURL = useCallback(() => {
-  let sortQuery = `sort[0][field]=${todoState.sortField}&sort[0][direction]=${todoState.sortDirection}`;
-  let searchQuery = "";
+    if (todoState.queryString) {
+      searchQuery = `&filterByFormula=SEARCH("${todoState.queryString}",+title)`;
+    }
 
-  if (todoState.queryString) {
-    searchQuery = `&filterByFormula=SEARCH("${todoState.queryString}",+title)`;
-  }
-
-  return encodeURI(`${url}?${sortQuery}${searchQuery}`);
+    return encodeURI(`${url}?${sortQuery}${searchQuery}`);
   }, [url, todoState.sortField, todoState.sortDirection, todoState.queryString]);
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setTitle('Todo List');
+    } else if (location.pathname === '/about') {
+      setTitle('About');
+    } else {
+      setTitle('Not Found');
+    }
+  }, [location]);
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -43,9 +53,7 @@ const encodeURL = useCallback(() => {
       try {
         const resp = await fetch(encodeURL(), options);
 
-        if (!resp.ok) {
-          throw new Error(resp.statusText);
-        }
+        if (!resp.ok) throw new Error(resp.statusText);
 
         const { records } = await resp.json();
 
@@ -70,14 +78,7 @@ const encodeURL = useCallback(() => {
     dispatch({ type: todoActions.startRequest });
 
     const payload = {
-      records: [
-        {
-          fields: {
-            title,
-            isCompleted: isCompleted ?? false,
-          },
-        },
-      ],
+      records: [{ fields: { title, isCompleted: isCompleted ?? false } }],
     };
 
     const options = {
@@ -91,10 +92,7 @@ const encodeURL = useCallback(() => {
 
     try {
       const resp = await fetch(encodeURL(), options);
-
-      if (!resp.ok) {
-        throw new Error(resp.statusText);
-      }
+      if (!resp.ok) throw new Error(resp.statusText);
 
       const { records } = await resp.json();
 
@@ -116,21 +114,13 @@ const encodeURL = useCallback(() => {
     }
   };
 
-  async function updateTodo(editedTodo) {
+  const updateTodo = async (editedTodo) => {
     dispatch({ type: todoActions.startRequest });
 
     const originalTodo = todoState.todoList.find((todo) => todo.id === editedTodo.id);
 
     const payload = {
-      records: [
-        {
-          id: editedTodo.id,
-          fields: {
-            title: editedTodo.title,
-            isCompleted: editedTodo.isCompleted,
-          },
-        },
-      ],
+      records: [{ id: editedTodo.id, fields: editedTodo }],
     };
 
     const options = {
@@ -144,43 +134,22 @@ const encodeURL = useCallback(() => {
 
     try {
       await fetch(encodeURL(), options);
-
-      dispatch({
-        type: todoActions.updateTodo,
-        payload: editedTodo,
-      });
+      dispatch({ type: todoActions.updateTodo, payload: editedTodo });
     } catch (error) {
-      dispatch({
-        type: todoActions.revertTodo,
-        payload: originalTodo,
-      });
-
-      dispatch({
-        type: todoActions.clearError,
-        payload: error.message,
-      });
+      dispatch({ type: todoActions.revertTodo, payload: originalTodo });
+      dispatch({ type: todoActions.clearError, payload: error.message });
     } finally {
       dispatch({ type: todoActions.endRequest });
     }
-  }
+  };
 
-  async function completeTodo(todo) {
+  const completeTodo = async (todo) => {
     dispatch({ type: todoActions.startRequest });
 
-    const updatedTodo = {
-      ...todo,
-      isCompleted: !todo.isCompleted,
-    };
+    const updatedTodo = { ...todo, isCompleted: !todo.isCompleted };
 
     const payload = {
-      records: [
-        {
-          id: updatedTodo.id,
-          fields: {
-            isCompleted: updatedTodo.isCompleted,
-          },
-        },
-      ],
+      records: [{ id: updatedTodo.id, fields: { isCompleted: updatedTodo.isCompleted } }],
     };
 
     const options = {
@@ -194,67 +163,35 @@ const encodeURL = useCallback(() => {
 
     try {
       await fetch(encodeURL(), options);
-
-      dispatch({
-        type: todoActions.completeTodo,
-        payload: updatedTodo,
-      });
+      dispatch({ type: todoActions.completeTodo, payload: updatedTodo });
     } catch (error) {
-      dispatch({
-        type: todoActions.setLoadError,
-        payload: error.message,
-      });
+      dispatch({ type: todoActions.setLoadError, payload: error.message });
     } finally {
       dispatch({ type: todoActions.endRequest });
     }
-  }
+  };
 
   return (
-  <div className={styles.appContainer}>
-    <StyledHeader>
-      <img src="/images/logo.svg" alt="Logo" width="40" height="40" />
-      Todo List
-    </StyledHeader>
-
-    <TodoForm onAddTodo={addTodo} isSaving={todoState.isSaving} />
-
-    <TodoList
-      todoList={todoState.todoList.filter(todo => !todo.isCompleted)}
-      onUpdateTodo={updateTodo}
-      onCompleteTodo={completeTodo}
-      isLoading={todoState.isLoading}
-    />
-
-    <hr />
-
-    <TodoViewForm
-    sortField={todoState.sortField}
-    setSortField={(val) => dispatch({ type: todoActions.setSortField, payload: val })}
-    sortDirection={todoState.sortDirection}
-    setSortDirection={(val) => dispatch({ type: todoActions.setSortDirection, payload: val })}
-    queryString={todoState.queryString}
-    setQueryString={(val) => dispatch({ type: todoActions.setQueryString, payload: val })}
-    />
-
-    {todoState.errorMessage && (
-      <StyledError>
-        <img src="/icons/error.svg" alt="Error icon" width={20} height={20} />
-        <hr />
-        <p>{todoState.errorMessage}</p>
-        <button
-          className={styles.errorDismiss}
-          onClick={() => dispatch({ type: todoActions.clearError, payload: "" })}
-        >
-          Dismiss
-        </button>
-      </StyledError>
-    )}
+    <div className={styles.appContainer}>
+      <StyledHeader>
+        <img src="/images/logo.svg" alt="Logo" width="40" height="40" />
+      </StyledHeader>
+      <>
+      <Header title={title} />
+      </>
+      <TodosPage
+        todoState={todoState}
+        dispatch={dispatch}
+        addTodo={addTodo}
+        updateTodo={updateTodo}
+        completeTodo={completeTodo}
+        todoActions={todoActions}
+      />
     </div>
   );
-
 }
 
-  const StyledHeader = styled.h1`
+const StyledHeader = styled.h1`
   display: flex;
   align-items: center;
   gap: 10px;

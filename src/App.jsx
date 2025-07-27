@@ -2,8 +2,10 @@ import './App.css';
 import styles from './App.module.css';
 import styled from "styled-components";
 import { useReducer, useState, useEffect, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import TodosPage from './pages/TodosPage';
+import About from './pages/About';
+import NotFound from './pages/NotFound';
 import Header from './shared/Header';
 import {
   reducer as todosReducer,
@@ -179,6 +181,10 @@ function App() {
       <>
       <Header title={title} />
       </>
+      <Routes>
+        <Route
+          path="/"
+          element={
       <TodosPage
         todoState={todoState}
         dispatch={dispatch}
@@ -187,6 +193,11 @@ function App() {
         completeTodo={completeTodo}
         todoActions={todoActions}
       />
+       }
+        />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </div>
   );
 }

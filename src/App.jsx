@@ -1,3 +1,4 @@
+
 import './App.css';
 import TodoList from './features/TodoList/TodoList.jsx';
 import TodoForm from './features/TodoForm.jsx';
@@ -61,33 +62,28 @@ function App() {
     fetchTodos();
   }, [url, token]);
 
-  async function updateTodo(editedTodo) {
-  setIsSaving(true);
-
-  const originalTodo = todos.find((todo) => todo.id === editedTodo.id);
-
-  const payload = {
-    records: [
-      {
-        id: editedTodo.id,
-        fields: {
-          title: editedTodo.title,
-          isCompleted: editedTodo.isCompleted,
+  async function completeTodo(editedTodo) {
+    const payload = {
+      records: [
+        {
+          id: editedTodo.id,
+          fields: {
+            title: editedTodo.title,
+            isCompleted: editedTodo.isCompleted,
+          },
         },
+      ],
+    };
+
+    const options = {
+      method: 'PATCH',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
       },
-    ],
-  };
+      body: JSON.stringify(payload),
+    };
 
-  const options = {
-    method: 'PATCH',
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  };
-
-  try {
     const resp = await fetch(url, options);
 
     if (!resp.ok) {
@@ -98,76 +94,85 @@ function App() {
 
     const { records } = await resp.json();
 
-    const updatedTodo = {
+    return {
       id: records[0].id,
       title: records[0].fields.title,
       isCompleted: records[0].fields.isCompleted ?? false,
     };
+  }
 
-    const updatedTodos = todos.map((todo) =>
-      todo.id === updatedTodo.id ? updatedTodo : todo
-    );
+  async function updateTodo(editedTodo) {
+    setIsSaving(true);
 
-    setTodoList(updatedTodos);
+    const originalTodo = todos.find((todo) => todo.id === editedTodo.id);
+
+    try {
+      const updatedTodo = await completeTodo(editedTodo);
+
+      const updatedTodos = todos.map((todo) =>
+        todo.id === updatedTodo.id ? updatedTodo : todo
+      );
+
+      setTodoList(updatedTodos);
     } catch (error) {
-    console.error("Error updating todo:", error);
-    setErrorMessage(`${error.message}. Reverting todo...`);
+      console.error("Error updating todo:", error);
+      setErrorMessage(`${error.message}. Reverting todo...`);
 
-    const revertedTodos = todos.map((todo) =>
-      todo.id === originalTodo.id ? originalTodo : todo
-    );
+      const revertedTodos = todos.map((todo) =>
+        todo.id === originalTodo.id ? originalTodo : todo
+      );
 
-    setTodoList(revertedTodos);
+      setTodoList(revertedTodos);
     } finally {
       setIsSaving(false);
     }
   }
 
   const addTodo = async ({ title, isCompleted }) => {
-  setIsSaving(true);
+    setIsSaving(true);
 
-  const payload = {
-    records: [
-      {
-        fields: {
-          title: title,
-          isCompleted: isCompleted ?? false,
+    const payload = {
+      records: [
+        {
+          fields: {
+            title: title,
+            isCompleted: isCompleted ?? false,
+          },
         },
-      },
-    ],
-  };
-
-  const options = {
-    method: 'POST',
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  };
-
-  try {
-    const resp = await fetch(url, options);
-
-    if (!resp.ok) {
-        throw new Error(resp.message);
-    }
-
-    const { records } = await resp.json();
-    const savedTodo = {
-    id: records[0].id,
-    title: records[0].fields.title,
-    isCompleted: records[0].fields.isCompleted ?? false,
+      ],
     };
 
-   setTodoList(prevTodos => [...prevTodos, savedTodo]);
-  } catch (error) {
-    console.error("Error saving todo:", error);
-    setErrorMessage(error.message);
-  } finally {
-    setIsSaving(false);
-  }
-};
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    };
+
+    try {
+      const resp = await fetch(url, options);
+
+      if (!resp.ok) {
+        throw new Error(resp.message);
+      }
+
+      const { records } = await resp.json();
+      const savedTodo = {
+        id: records[0].id,
+        title: records[0].fields.title,
+        isCompleted: records[0].fields.isCompleted ?? false,
+      };
+
+      setTodoList(prevTodos => [...prevTodos, savedTodo]);
+    } catch (error) {
+      console.error("Error saving todo:", error);
+      setErrorMessage(error.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div>

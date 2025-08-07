@@ -17,7 +17,7 @@ function App() {
     setErrorMessage(message);
   }
 
-  useEffect(() => {
+useEffect(() => {
     const fetchTodos = async () => {
       setIsLoading(true);
 
@@ -32,7 +32,7 @@ function App() {
         const resp = await fetch(url, options);
 
         if (!resp.ok) {
-          throw new Error(resp.message);
+          throw new Error(`HTTP error! Status: ${resp.status}`);
         }
 
         const { records } = await resp.json();
@@ -155,8 +155,8 @@ function App() {
       const resp = await fetch(url, options);
 
       if (!resp.ok) {
-        throw new Error(resp.message);
-      }
+          throw new Error(`HTTP error! Status: ${resp.status}`);
+        }
 
       const { records } = await resp.json();
       const savedTodo = {

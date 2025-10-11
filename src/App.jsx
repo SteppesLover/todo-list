@@ -55,8 +55,12 @@ function App() {
       try {
         const resp = await fetch(encodeURL(), options);
 
-        if (!resp.ok) throw new Error(resp.statusText);
-
+        if (!resp.ok) {
+          const errorData = await resp.json().catch(() => ({}));
+          const errorMessage = errorData?.error?.message || `HTTP error! Status: ${resp.status}`;
+          throw new Error(errorMessage);
+        }
+        
         const { records } = await resp.json();
 
         dispatch({

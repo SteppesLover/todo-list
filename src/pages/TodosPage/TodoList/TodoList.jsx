@@ -50,7 +50,7 @@ function TodoList({ todoList, onUpdateTodo, onCompleteTodo, isLoading }) {
                   <TodoListItem
                     key={todo.id}
                     todo={todo}
-                    onUpdate={onUpdateTodo}
+                    onUpdateTodo={onUpdateTodo}                    
                     onComplete={onCompleteTodo}
                   />
                 ))}

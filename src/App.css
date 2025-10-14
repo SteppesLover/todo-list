@@ -1,0 +1,36 @@
+body, #root {
+  background-color: #2ecc71; 
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: sans-serif;
+  color: rgb(0, 0, 0);
+}
+
+button {
+  background-color: white;
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
+  padding: 8px 16px;
+  margin: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #27ae60; 
+  color: white;
+}
+
+input[type="text"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 4px 0;
+  font-size: 16px;
+}

@@ -1,0 +1,12 @@
+.appContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.errorDismiss {
+  border: 1px solid red;
+  padding: 8px;
+  background-color: #ffe0e0;
+}
